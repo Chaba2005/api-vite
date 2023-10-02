@@ -115,6 +115,38 @@ router.post("/", async (req, res, next) => {
   await Cardapio.create(cardapio).catch(next);
   res.send("Cardápio adicionado com sucesso!");
 });
+router.put("/", async (req, res, next) => {
+  const cardapio = req.body;
+
+  // Aqui deveria ter uma validação
+  // Recomendo usar zod
+  if (!cardapio) {
+    next(
+      new APIError("Cardápio inválido", {
+        status: 400
+      })
+    );
+  }
+
+  await Cardapio.update(cardapio).catch(next);
+  res.send("Cardápio alterado com sucesso!");
+});
+router.delete("/", async (req, res, next) => {
+  const codigo = req.body;
+
+  // Aqui deveria ter uma validação
+  // Recomendo usar zod
+  if (!codigo) {
+    next(
+      new APIError("Cardápio inválido", {
+        status: 400
+      })
+    );
+  }
+
+  await Cardapio.remove(codigo).catch(next);
+  res.send("Cardápio excluído com sucesso!");
+});
 
 router.get("/:data", async (req, res, next) => {
   const date = new Date(req.params.data);

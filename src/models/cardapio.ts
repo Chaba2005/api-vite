@@ -1,4 +1,5 @@
 export type Cardapio = {
+  codigo: number,
   principal: string;
   guarnicao: string;
   salada: string;

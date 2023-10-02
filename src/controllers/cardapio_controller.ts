@@ -170,6 +170,7 @@ export async function findAll() {
 
 export async function create(cardapio: Cardapio) {
   try {
+    console.log(cardapio.data);
     await sql`
     INSERT INTO Cardapio
       (principal, guarnicao, salada, sobremesa, suco, periodo, vegetariano, data)
@@ -188,6 +189,44 @@ export async function create(cardapio: Cardapio) {
 
     if (error.code === "ER_DUP_ENTRY")
       throw new APIError("Cardápio já cadastrado", { status: 409 });
+    else throw error;
+  }
+}
+export async function update(cardapio: Cardapio) {
+  try {
+    console.log(cardapio.data);
+    await sql`
+    UPDATE Cardapio SET
+      principal = ${cardapio.principal},
+      guarnicao = ${cardapio.guarnicao}, 
+      salada = ${cardapio.salada}, 
+      sobremesa = ${cardapio.sobremesa}, 
+      suco = ${cardapio.suco}, 
+      periodo = ${cardapio.periodo}, 
+      vegetariano = ${cardapio.vegetariano}, 
+      data = ${cardapio.data}
+      WHERE 
+      codigo = ${cardapio.codigo}
+    `;
+  } catch (error) {
+    if (!(error && typeof error === "object" && "code" in error)) throw error;
+
+    if (error.code === "ER_DUP_ENTRY")
+      throw new APIError("Falha!", { status: 409 });
+    else throw error;
+  }
+}
+
+export async function remove(codigo: number) {
+  try {
+    await sql`
+      DELETE from Cardapio WHHERE codigo = ${codigo}
+    `;
+  } catch (error) {
+    if (!(error && typeof error === "object" && "code" in error)) throw error;
+
+    if (error.code === "ER_DUP_ENTRY")
+      throw new APIError("Falha!", { status: 409 });
     else throw error;
   }
 }
