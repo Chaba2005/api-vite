@@ -7,8 +7,7 @@ export async function cardapioHoje() {
   const [cardapio] = await sql<Cardapio>`
     SELECT principal,guarnicao,salada,sobremesa,suco,periodo,vegetariano
     FROM Cardapio
-    WHERE data = CURDATE()
-  `;
+    WHERE data = CURDATE()`;
 
   if (!cardapio) {
     throw new APIError("Não há cardápios para hoje", {
@@ -194,7 +193,7 @@ export async function create(cardapio: Cardapio) {
 }
 export async function update(cardapio: Cardapio) {
   try {
-    console.log(cardapio.data);
+    console.log(cardapio.codigo);
     await sql`
     UPDATE Cardapio SET
       principal = ${cardapio.principal},
@@ -217,10 +216,11 @@ export async function update(cardapio: Cardapio) {
   }
 }
 
-export async function remove(codigo: number) {
+export async function remove(cardapio: Cardapio) {
   try {
+    console.log(cardapio.codigo);
     await sql`
-      DELETE from Cardapio WHHERE codigo = ${codigo}
+      DELETE from Cardapio WHERE codigo = ${cardapio.codigo}
     `;
   } catch (error) {
     if (!(error && typeof error === "object" && "code" in error)) throw error;

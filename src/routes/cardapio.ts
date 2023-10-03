@@ -132,11 +132,11 @@ router.put("/", async (req, res, next) => {
   res.send("Cardápio alterado com sucesso!");
 });
 router.delete("/", async (req, res, next) => {
-  const codigo = req.body;
+  const cardapio = req.body;
 
   // Aqui deveria ter uma validação
   // Recomendo usar zod
-  if (!codigo) {
+  if (!cardapio) {
     next(
       new APIError("Cardápio inválido", {
         status: 400
@@ -144,7 +144,7 @@ router.delete("/", async (req, res, next) => {
     );
   }
 
-  await Cardapio.remove(codigo).catch(next);
+  await Cardapio.remove(cardapio).catch(next);
   res.send("Cardápio excluído com sucesso!");
 });
 
