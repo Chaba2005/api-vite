@@ -156,6 +156,18 @@ export async function findByYear(year: number) {
   return addToYear(cardapios);
 }
 
+export async function finById(id: number) {
+  const cardapio = await sql<Cardapio>`
+    SELECT * FROM Cardapio
+    WHERE id = ${id}
+  `;
+
+  if (!cardapio?.length)
+    throw new APIError("Cardápio não encontrado", { status: 404 });
+
+  return cardapio;
+}
+
 export async function findAll() {
   const cardapios = await sql<Cardapio>`
     SELECT * FROM Cardapio ORDER BY data DESC

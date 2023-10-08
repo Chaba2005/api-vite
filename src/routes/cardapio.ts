@@ -163,4 +163,12 @@ router.get("/:data", async (req, res, next) => {
   res.send(cardapio);
 });
 
+router.get("/id/:id", async (req, res, next) => {
+  const id = parseInt(req.params.id);
+
+
+  const cardapio = await Cardapio.finById(id).catch(next);
+  res.send(cardapio);
+});
+
 export default router;
