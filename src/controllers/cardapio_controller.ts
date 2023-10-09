@@ -1,4 +1,5 @@
 import { sql } from "../database";
+import {format} from "date-fns"
 import { APIError } from "../models/api_error";
 import { Cardapio } from "../models/cardapio";
 import { addToMonth, addToWeek, addToYear } from "./date_controller";
@@ -172,7 +173,7 @@ export async function findAll() {
   const cardapios = await sql<Cardapio>`
     SELECT * FROM Cardapio ORDER BY data DESC
   `;
-
+  console.log(cardapios[0].data)
   if (!cardapios?.length)
     throw new APIError("Cardápios não encontrados", { status: 404 });
 
@@ -181,7 +182,7 @@ export async function findAll() {
 
 export async function create(cardapio: Cardapio) {
   try {
-    console.log(cardapio.data);
+    
     await sql`
     INSERT INTO Cardapio
       (principal, guarnicao, salada, sobremesa, suco, periodo, vegetariano, data)
@@ -193,7 +194,7 @@ export async function create(cardapio: Cardapio) {
       ${cardapio.suco},
       ${cardapio.periodo},
       ${cardapio.vegetariano},
-      ${cardapio.data}
+      ${format(new Date(cardapio.data),'yyyy-MM-dd')}
     )`;
   } catch (error) {
     if (!(error && typeof error === "object" && "code" in error)) throw error;
