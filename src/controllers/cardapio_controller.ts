@@ -157,10 +157,14 @@ export async function findByYear(year: number) {
   return addToYear(cardapios);
 }
 
-export async function finById(id: number) {
+export async function findByCodigo(codigo: number) {
   const cardapio = await sql<Cardapio>`
     SELECT * FROM Cardapio
+<<<<<<< HEAD
     WHERE codigo = ${id}
+=======
+    WHERE codigo = ${codigo}
+>>>>>>> 4b6a99f2dabd19e20b7cd114a026361bb152be9d
   `;
 
   if (!cardapio?.length)
@@ -231,7 +235,7 @@ export async function update(cardapio: Cardapio) {
 
 export async function remove(cardapio: Cardapio) {
   try {
-    console.log(cardapio.codigo);
+    console.log(cardapio);
     await sql`
       DELETE from Cardapio WHERE codigo = ${cardapio.codigo}
     `;

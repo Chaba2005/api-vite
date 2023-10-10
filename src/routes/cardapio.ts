@@ -167,7 +167,7 @@ router.get("/id/:id", async (req, res, next) => {
   const id = parseInt(req.params.id);
 
 
-  const cardapio = await Cardapio.finById(id).catch(next);
+  const cardapio = await Cardapio.findByCodigo(id).catch(next);
   res.send(cardapio);
 });
 
