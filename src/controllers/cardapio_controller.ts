@@ -160,7 +160,7 @@ export async function findByYear(year: number) {
 export async function finById(id: number) {
   const cardapio = await sql<Cardapio>`
     SELECT * FROM Cardapio
-    WHERE id = ${id}
+    WHERE codigo = ${id}
   `;
 
   if (!cardapio?.length)
@@ -216,7 +216,7 @@ export async function update(cardapio: Cardapio) {
       suco = ${cardapio.suco}, 
       periodo = ${cardapio.periodo}, 
       vegetariano = ${cardapio.vegetariano}, 
-      data = ${cardapio.data}
+      data = ${format(new Date(cardapio.data),'yyyy-MM-dd')}
       WHERE 
       codigo = ${cardapio.codigo}
     `;

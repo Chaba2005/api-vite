@@ -35,9 +35,9 @@ export async function addAluno({ ra, senha }: Auth) {
   `;
 }
 
-export async function checkRA(ra: string) {
+export async function checkRA({ra, senha}: Auth) {
   const [aluno] = await sql<Auth>`
-    SELECT ra FROM Saldo_RU WHERE ra = ${ra}
+    SELECT ra FROM Saldo_RU WHERE ra = ${ra} and ${senha}
   `;
 
   return !!aluno;

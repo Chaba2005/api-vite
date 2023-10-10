@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getSaldo } from "../controllers/aluno_controller";
+import { checkRA, getSaldo } from "../controllers/aluno_controller";
 
 const router = Router();
 
@@ -10,4 +10,10 @@ router.post("/", async (req, res) => {
   res.send(saldo);
 });
 
+router.post("/ra", async (req,res)=>{
+  const body = req.body
+  const aluno = await checkRA(body)
+  if(!aluno) res.send(false)
+  res.send(aluno);
+})
 export default router;
