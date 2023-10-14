@@ -160,8 +160,13 @@ export async function findByYear(year: number) {
 export async function findByCodigo(codigo: number) {
   const cardapio = await sql<Cardapio>`
     SELECT * FROM Cardapio
+<<<<<<< HEAD
 
     WHERE codigo = ${codigo}
+=======
+    WHERE codigo = ${codigo}
+
+>>>>>>> 1a573eacb18e2817fbd430f8bf12929f2f3d1a47
   `;
 
   if (!cardapio?.length)
