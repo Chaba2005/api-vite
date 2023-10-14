@@ -1,54 +1,28 @@
-import users from "../data/users.json";
+import { sql } from "../database";
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs'
+import { APIError } from '../models/api_error';
+import { User } from "../models/user";
 
-type User = (typeof users)[number];
-
-export function getID(username: string): number {
-  const index = users.findIndex((user) => user.username === username);
-  if (index < 0) throw new Error("User not found");
-
-  return index;
+export async function createUser(user: User){
+    try{
+        const hash = await bcrypt.hash(user.password,10)
+        await sql<User>`INSERT INTO user (username,password) VALUES (${user.user},${hash})`
+    } catch(e){
+        console.error(e)
+        throw new APIError('Deu ruim!', {status:40} );
+    }
 }
 
-export function byID(id: number): User {
-  const user = users[id];
-  if (!user) throw new Error("User ID not found");
+export async function login(user: User){
+    const [response] = await sql<User>`SELECT password FROM user WHERE username = ${user.user}`; 
+    if(!response) throw new APIError('Usuário não encontrado!',{ status:404 });
 
-  return user;
-}
+    const hash = response.password;
 
-export function byUsername(username: string): User {
-  const index = getID(username);
-  return byID(index);
-}
+    if(!await bcrypt.compare(user.password,hash)) throw new APIError('Senha incorreta', { status:401 })
 
-export function checkPassword(user: string, password: string): boolean {
-  const userObj = byUsername(user);
-  return userObj.password === password;
-}
-
-export function add(user: User): User {
-  users.push(user);
-  return user;
-}
-
-export function updateUser(
-  userInfo: { username: string; password: string },
-  user: User
-): void {
-  if (!checkPassword(userInfo.username, userInfo.password))
-    throw new Error("Incorrect password");
-
-  const index = getID(userInfo.username);
-  users[index] = user;
-}
-
-export function deleteUser(userInfo: {
-  username: string;
-  password: string;
-}): void {
-  if (!checkPassword(userInfo.username, userInfo.password))
-    throw new Error("Incorrect password");
-
-  const index = getID(userInfo.username);
-  users.splice(index, 1);
+    const token = jwt.sign({username:user},'foron',{expiresIn:'2h'})
+    console.log(token)
+    return token
 }
